@@ -20,15 +20,9 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.activity.Executable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
@@ -89,33 +83,6 @@ public final class ContainerUtil
     }
 
     /**
-     * Supply specified object with a Context object if it implements the
-     * {@link Contextualizable} interface.
-     *
-     * @param object the object to contextualize
-     * @param context the context object to use for object.
-     *        May be null in which case the specified object must not
-     *        implement Contextualizable.
-     * @throws ContextException if there is a problem contextualizing object
-     * @throws IllegalArgumentException if the object is Contextualizable but
-     *         context is null
-     */
-    public static void contextualize( final Object object,
-                                      final Context context )
-        throws ContextException
-    {
-        if( object instanceof Contextualizable )
-        {
-            if( null == context )
-            {
-                final String message = "context is null";
-                throw new IllegalArgumentException( message );
-            }
-            ( (Contextualizable)object ).contextualize( context );
-        }
-    }
-
-    /**
      * Supply specified object with ServiceManager if it implements the
      * {@link Serviceable} interface.
      *
@@ -139,36 +106,6 @@ public final class ContainerUtil
                 throw new IllegalArgumentException( message );
             }
             ( (Serviceable)object ).service( serviceManager );
-        }
-    }
-
-    /**
-     * Supply specified object with ComponentManager if it implements the
-     * {@link Composable} interface.
-     *
-     * @param object the object to compose
-     * @param componentManager the ComponentManager object to use for object.
-     *        May be null in which case the specified object must not
-     *        implement Composable.
-     * @throws ComponentException if there is a problem composing object
-     * @deprecated compose() is no longer the preferred method via
-     *             which components will be supplied with Components. Please
-     *             Use service() from Composable instead.
-     * @throws IllegalArgumentException if the object is Composable but
-     *         ComponentManager is null
-     */
-    public static void compose( final Object object,
-                                final ComponentManager componentManager )
-        throws ComponentException
-    {
-        if( object instanceof Composable )
-        {
-            if( null == componentManager )
-            {
-                final String message = "componentManager is null";
-                throw new IllegalArgumentException( message );
-            }
-            ( (Composable)object ).compose( componentManager );
         }
     }
 
