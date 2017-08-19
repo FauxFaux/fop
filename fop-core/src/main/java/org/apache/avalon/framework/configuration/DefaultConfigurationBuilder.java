@@ -23,7 +23,6 @@ import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -114,15 +113,6 @@ public class DefaultConfigurationBuilder
     }
 
     /**
-     * Create a Configuration Builder with your own XMLReader.
-     * @param parser an <code>XMLReader</code>
-     */
-    public DefaultConfigurationBuilder( XMLReader parser )
-    {
-        setParser( parser );
-    }
-
-    /**
      * Internally sets up the XMLReader
      */
     private void setParser( XMLReader parser )
@@ -154,20 +144,6 @@ public class DefaultConfigurationBuilder
         }
 
         return new SAXConfigurationHandler();
-    }
-
-    /**
-     * Build a configuration object from a file using a filename.
-     * @param filename name of the file
-     * @return a <code>Configuration</code> object
-     * @throws SAXException if a parsing error occurs
-     * @throws IOException if an I/O error occurs
-     * @throws ConfigurationException if an error occurs
-     */
-    public Configuration buildFromFile( final String filename )
-        throws SAXException, IOException, ConfigurationException
-    {
-        return buildFromFile( new File( filename ) );
     }
 
     /**
@@ -204,41 +180,6 @@ public class DefaultConfigurationBuilder
     }
 
     /**
-     * Build a configuration object using an InputStream;
-     * supplying a systemId to make messages about all
-     * kinds of errors more meaningfull.
-     * @param inputStream an <code>InputStream</code> value
-     * @param systemId the systemId to set on the intermediate sax
-     *         inputSource
-     * @return a <code>Configuration</code> object
-     * @throws SAXException if a parsing error occurs
-     * @throws IOException if an I/O error occurs
-     * @throws ConfigurationException if an error occurs
-     */
-    public Configuration build( final InputStream inputStream, 
-        final String systemId )
-        throws SAXException, IOException, ConfigurationException
-    {
-        final InputSource inputSource = new InputSource( inputStream );
-        inputSource.setSystemId( systemId );
-        return build( inputSource );
-    }
-
-    /**
-     * Build a configuration object using an URI
-     * @param uri a <code>String</code> value
-     * @return a <code>Configuration</code> object
-     * @throws SAXException if a parsing error occurs
-     * @throws IOException if an I/O error occurs
-     * @throws ConfigurationException if an error occurs
-     */
-    public Configuration build( final String uri )
-        throws SAXException, IOException, ConfigurationException
-    {
-        return build( new InputSource( uri ) );
-    }
-
-    /**
      * Build a configuration object using an XML InputSource object
      * @param input an <code>InputSource</code> value
      * @return a <code>Configuration</code> object
@@ -257,18 +198,4 @@ public class DefaultConfigurationBuilder
         }
     }
 
-    /**
-     * Sets the <code>EntityResolver</code> to 
-     * be used by parser. Useful when dealing with xml
-     * files that reference external entities.
-     * 
-     * @param resolver implementation of <code>EntityResolver</code>
-     */
-    public void setEntityResolver( final EntityResolver resolver )
-    {
-        synchronized( this )
-        {
-            m_parser.setEntityResolver( resolver );
-        }
-    }
 }
