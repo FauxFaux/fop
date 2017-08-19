@@ -31,7 +31,6 @@ package org.apache.avalon.framework.service;
  *
  * @author <a href="mailto:dev@avalon.apache.org">Avalon Development Team</a>
  * @version $Id: Serviceable.java 506231 2007-02-12 02:36:54Z crossley $
- * @see org.apache.avalon.framework.service.ServiceManager
  *
  */
 public interface Serviceable

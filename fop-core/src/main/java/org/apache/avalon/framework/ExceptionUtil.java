@@ -53,19 +53,6 @@ public final class ExceptionUtil
     }
 
     /**
-     * Generate string for specified exception and if printCascading
-     * is true will print all cascading exceptions.
-     * @param throwable a <code>Throwable</code>
-     * @param printCascading if <code>true</code> will print all cascading exceptions
-     * @return the stack trace as a <code>String</code>
-     */
-    public static String printStackTrace( final Throwable throwable,
-                                          final boolean printCascading )
-    {
-        return printStackTrace( throwable, 0, printCascading );
-    }
-
-    /**
      * Serialize the specified <code>Throwable</code> to a string.
      * Restrict the number of frames printed out to the specified depth.
      * If the depth specified is <code>0</code> then all the frames are
