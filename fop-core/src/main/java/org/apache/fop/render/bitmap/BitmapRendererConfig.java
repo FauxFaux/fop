@@ -23,7 +23,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
 
-import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.fop.configuration.Configuration;
 
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;

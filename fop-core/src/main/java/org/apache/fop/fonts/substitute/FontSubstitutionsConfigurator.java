@@ -19,7 +19,7 @@
 
 package org.apache.fop.fonts.substitute;
 
-import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.fop.configuration.Configuration;
 
 import org.apache.fop.apps.FOPException;
 

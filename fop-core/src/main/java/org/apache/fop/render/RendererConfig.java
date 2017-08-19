@@ -19,7 +19,7 @@
 
 package org.apache.fop.render;
 
-import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.fop.configuration.Configuration;
 
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;

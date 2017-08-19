@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.avalon.framework.configuration;
+package org.apache.fop.configuration;
 
 /**
  * This interface should be implemented by classes that need to be

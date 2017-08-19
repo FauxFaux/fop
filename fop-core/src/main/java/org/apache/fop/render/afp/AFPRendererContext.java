@@ -21,7 +21,7 @@ package org.apache.fop.render.afp;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.fop.configuration.Configuration;
 
 import org.apache.fop.afp.AFPPaintingState;
 import org.apache.fop.afp.AFPResourceInfo;

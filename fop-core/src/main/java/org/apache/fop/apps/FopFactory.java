@@ -30,7 +30,7 @@ import java.util.Set;
 
 import org.xml.sax.SAXException;
 
-import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.fop.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

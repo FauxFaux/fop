@@ -14,26 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.avalon.framework.configuration;
+package org.apache.fop.configuration;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Iterator;
 import org.xml.sax.Attributes;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.NamespaceSupport;
 
 /**
- * A SAXConfigurationHandler helps build Configurations out of sax events.
+ * A SAXConfigurationHandler helps build Configurations out of sax events,
+ * including namespace information.
  *
  * @author <a href="mailto:dev@avalon.apache.org">Avalon Development Team</a>
- * @version $Id: SAXConfigurationHandler.java 506231 2007-02-12 02:36:54Z crossley $
+ * @version $Id: NamespacedSAXConfigurationHandler.java 506231 2007-02-12 02:36:54Z crossley $
  */
-public class SAXConfigurationHandler
-    extends DefaultHandler
-    implements ErrorHandler
+public class NamespacedSAXConfigurationHandler
+    extends SAXConfigurationHandler
 {
     /**
      * Likely number of nested configuration items. If more is
@@ -41,6 +42,7 @@ public class SAXConfigurationHandler
      */
     private static final int EXPECTED_DEPTH = 5;
     private final ArrayList m_elements = new ArrayList( EXPECTED_DEPTH );
+    private final ArrayList m_prefixes = new ArrayList( EXPECTED_DEPTH );
     private final ArrayList m_values = new ArrayList( EXPECTED_DEPTH );
     /**
      * Contains true at index n if space in the configuration with
@@ -49,6 +51,7 @@ public class SAXConfigurationHandler
     private final BitSet m_preserveSpace = new BitSet();
     private Configuration m_configuration;
     private Locator m_locator;
+    private NamespaceSupport m_namespaceSupport = new NamespaceSupport();
 
     /**
      * Get the configuration object that was built.
@@ -66,6 +69,12 @@ public class SAXConfigurationHandler
     public void clear()
     {
         m_elements.clear();
+        Iterator i = m_prefixes.iterator();
+        while( i.hasNext() )
+        {
+            ( (ArrayList)i.next() ).clear();
+        }
+        m_prefixes.clear();
         m_values.clear();
         m_locator = null;
     }
@@ -78,6 +87,30 @@ public class SAXConfigurationHandler
     public void setDocumentLocator( final Locator locator )
     {
         m_locator = locator;
+    }
+
+    /**
+     * Handling hook for starting the document parsing.
+     *
+     * @throws SAXException if an error occurs
+     */
+    public void startDocument()
+        throws SAXException
+    {
+        m_namespaceSupport.reset();
+        super.startDocument();
+    }
+
+    /**
+     * Handling hook for ending the document parsing.
+     *
+     * @throws SAXException if an error occurs
+     */
+    public void endDocument()
+        throws SAXException
+    {
+        super.endDocument();
+        m_namespaceSupport.reset();
     }
 
     /**
@@ -118,6 +151,14 @@ public class SAXConfigurationHandler
             (DefaultConfiguration)m_elements.remove( depth );
         final String accumulatedValue =
             ( (StringBuffer)m_values.remove( depth ) ).toString();
+        final ArrayList prefixes = (ArrayList)m_prefixes.remove( depth );
+
+        final Iterator i = prefixes.iterator();
+        while( i.hasNext() )
+        {
+            endPrefixMapping( (String)i.next() );
+        }
+        prefixes.clear();
 
         if( finishedConfiguration.getChildren().length == 0 )
         {
@@ -142,7 +183,7 @@ public class SAXConfigurationHandler
             final String trimmedValue = accumulatedValue.trim();
             if( trimmedValue.length() > 0 )
             {
-                throw new SAXException( "Not allowed to define mixed content in the "
+                throw new SAXException( "Not allowed to define mixed content in the " 
                                         + "element " + finishedConfiguration.getName() + " at "
                                         + finishedConfiguration.getLocation() );
             }
@@ -152,20 +193,29 @@ public class SAXConfigurationHandler
         {
             m_configuration = finishedConfiguration;
         }
+
+        m_namespaceSupport.popContext();
     }
 
     /**
      * Create a new <code>DefaultConfiguration</code> with the specified
-     * local name and location.
+     * local name, namespace, and location.
      *
      * @param localName a <code>String</code> value
+     * @param namespaceURI a <code>String</code> value
      * @param location a <code>String</code> value
      * @return a <code>DefaultConfiguration</code> value
      */
     protected DefaultConfiguration createConfiguration( final String localName,
+                                                        final String namespaceURI,
                                                         final String location )
     {
-        return new DefaultConfiguration( localName, location );
+        String prefix = m_namespaceSupport.getPrefix( namespaceURI );
+        if( prefix == null )
+        {
+            prefix = "";
+        }
+        return new DefaultConfiguration( localName, location, namespaceURI, prefix );
     }
 
     /**
@@ -183,8 +233,9 @@ public class SAXConfigurationHandler
                               final Attributes attributes )
         throws SAXException
     {
+        m_namespaceSupport.pushContext();
         final DefaultConfiguration configuration =
-            createConfiguration( rawName, getLocationString() );
+            createConfiguration( localName, namespaceURI, getLocationString() );
         // depth of new configuration (not decrementing here, configuration
         // is to be added)
         final int depth = m_elements.size();
@@ -202,20 +253,28 @@ public class SAXConfigurationHandler
         m_elements.add( configuration );
         m_values.add( new StringBuffer() );
 
-        final int attributesSize = attributes.getLength();
+        final ArrayList prefixes = new ArrayList();
+        AttributesImpl componentAttr = new AttributesImpl();
 
-        for( int i = 0; i < attributesSize; i++ )
+        for( int i = 0; i < attributes.getLength(); i++ )
         {
-            final String name = attributes.getQName( i );
-            final String value = attributes.getValue( i );
-
-            if( !name.equals( "xml:space" ) )
+            if( attributes.getQName( i ).startsWith( "xmlns" ) )
             {
-                configuration.setAttribute( name, value );
+                prefixes.add( attributes.getLocalName( i ) );
+                this.startPrefixMapping( attributes.getLocalName( i ),
+                                         attributes.getValue( i ) );
+            }
+            else if( attributes.getQName( i ).equals( "xml:space" ) )
+            {
+                preserveSpace = attributes.getValue( i ).equals( "preserve" );
             }
             else
             {
-                preserveSpace = value.equals( "preserve" );
+                componentAttr.addAttribute( attributes.getURI( i ),
+                                            attributes.getLocalName( i ),
+                                            attributes.getQName( i ),
+                                            attributes.getType( i ),
+                                            attributes.getValue( i ) );
             }
         }
 
@@ -226,6 +285,17 @@ public class SAXConfigurationHandler
         else
         {
             m_preserveSpace.clear( depth );
+        }
+
+        m_prefixes.add( prefixes );
+
+        final int attributesSize = componentAttr.getLength();
+
+        for( int i = 0; i < attributesSize; i++ )
+        {
+            final String name = componentAttr.getQName( i );
+            final String value = componentAttr.getValue( i );
+            configuration.setAttribute( name, value );
         }
     }
 
@@ -281,5 +351,19 @@ public class SAXConfigurationHandler
                 + m_locator.getLineNumber()
                 + ( columnNumber >= 0 ? ( ":" + columnNumber ) : "" );
         }
+    }
+
+    /**
+     * Handling hook for starting prefix mapping.
+     *
+     * @param prefix a <code>String</code> value
+     * @param uri a <code>String</code> value
+     * @throws SAXException if an error occurs
+     */
+    public void startPrefixMapping( String prefix, String uri )
+        throws SAXException
+    {
+        m_namespaceSupport.declarePrefix( prefix, uri );
+        super.startPrefixMapping( prefix, uri );
     }
 }

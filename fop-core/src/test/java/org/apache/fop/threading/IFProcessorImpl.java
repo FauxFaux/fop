@@ -35,9 +35,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.xml.sax.ContentHandler;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.fop.configuration.Configurable;
+import org.apache.fop.configuration.Configuration;
+import org.apache.fop.configuration.ConfigurationException;
 import org.apache.fop.threading.logger.AbstractLogEnabled;
 import org.apache.commons.io.FilenameUtils;
 

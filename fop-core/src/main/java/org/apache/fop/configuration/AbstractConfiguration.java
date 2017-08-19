@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.avalon.framework.configuration;
+package org.apache.fop.configuration;
 
 /**
  * This is an abstract <code>Configuration</code> implementation that deals

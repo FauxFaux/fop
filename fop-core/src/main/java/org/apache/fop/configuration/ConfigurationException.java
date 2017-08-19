@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.avalon.framework.configuration;
+package org.apache.fop.configuration;
 
 /**
  * Thrown when a <code>Configurable</code> component cannot be configured

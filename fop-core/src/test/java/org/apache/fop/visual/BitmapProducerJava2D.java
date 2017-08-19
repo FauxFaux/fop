@@ -30,9 +30,9 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.fop.configuration.Configurable;
+import org.apache.fop.configuration.Configuration;
+import org.apache.fop.configuration.ConfigurationException;
 import org.apache.commons.io.IOUtils;
 
 import org.apache.fop.apps.FOUserAgent;
@@ -66,7 +66,7 @@ public class BitmapProducerJava2D extends AbstractBitmapProducer implements Conf
         fopFactory = FopFactory.newInstance(baseUri);
     }
 
-    /** @see org.apache.avalon.framework.configuration.Configurable */
+    /** @see org.apache.fop.configuration.Configurable */
     public void configure(Configuration cfg) throws ConfigurationException {
         this.deleteTempFiles = cfg.getChild("delete-temp-files").getValueAsBoolean(true);
     }
