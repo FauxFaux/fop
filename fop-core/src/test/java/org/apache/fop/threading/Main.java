@@ -23,7 +23,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
@@ -70,7 +69,7 @@ public final class Main {
 
             System.exit(0);
         } catch (Exception e) {
-            System.err.println(ExceptionUtil.printStackTrace(e));
+            e.printStackTrace(System.err);
             System.exit(-1);
         }
     }
