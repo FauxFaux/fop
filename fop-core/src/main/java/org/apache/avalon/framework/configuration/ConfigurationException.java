@@ -16,8 +16,6 @@
  */
 package org.apache.avalon.framework.configuration;
 
-import org.apache.avalon.framework.CascadingException;
-
 /**
  * Thrown when a <code>Configurable</code> component cannot be configured
  * properly, or if a value cannot be retrieved properly.
@@ -26,7 +24,7 @@ import org.apache.avalon.framework.CascadingException;
  * @version $Id: ConfigurationException.java 506231 2007-02-12 02:36:54Z crossley $
  */
 public class ConfigurationException
-    extends CascadingException
+    extends Exception
 {
     private final Configuration m_config;
 

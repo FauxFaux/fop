@@ -31,7 +31,6 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Executable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -183,7 +182,7 @@ public class FOPTestbed extends AbstractLogEnabled
             ContainerUtil.initialize(fop);
             return fop;
         } catch (Exception e) {
-            throw new CascadingRuntimeException("Error creating FO Processor", e);
+            throw new RuntimeException("Error creating FO Processor", e);
         }
     }
 
