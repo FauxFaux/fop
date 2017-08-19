@@ -28,12 +28,12 @@ import java.util.Collection;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.avalon.framework.configuration.Configurable;
 import org.xml.sax.SAXException;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.AndFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -262,7 +262,11 @@ public class BatchDiffer {
                 Object producer = clazz.getDeclaredConstructor(URI.class)
                                        .newInstance(srcDir.toURI());
                 producers[i] = (BitmapProducer) producer;
-                ContainerUtil.configure(producers[i], children[i]);
+                if( producers[i] instanceof Configurable)
+                {
+                    assert null != children[i] : "configuration is null";
+                    ( (Configurable) producers[i]).configure(children[i]);
+                }
             } catch (Exception e) {
                 log.error("Error setting up producers", e);
                 throw new RuntimeException("Error while setting up producers");

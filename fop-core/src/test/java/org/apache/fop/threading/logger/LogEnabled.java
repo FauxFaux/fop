@@ -14,26 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.avalon.framework.activity;
+package org.apache.fop.threading.logger;
 
 /**
- * The Executable can be implemented by components that need to perform
- * some work. In many respects it is similar to Runnable except that it
- * also allows an application to throw a non-Runtime Exception.
- *
- * <p>The work done may be short lived (ie a simple task) or it could
- * be a long running.</p>
+ * Components that need to log can implement this interface to
+ * be provided Loggers.
  *
  * @author <a href="mailto:dev@avalon.apache.org">Avalon Development Team</a>
- * @version $Id: Executable.java 506231 2007-02-12 02:36:54Z crossley $
+ * @version $Id: LogEnabled.java 506231 2007-02-12 02:36:54Z crossley $
  */
-public interface Executable
+public interface LogEnabled
 {
     /**
-     * Execute the action associated with this component.
+     * Provide component with a logger.
      *
-     * @throws Exception if an error occurs
+     * @param logger the logger. Must not be <code>null</code>.
      */
-    void execute()
-        throws Exception;
+    void enableLogging( Logger logger );
 }

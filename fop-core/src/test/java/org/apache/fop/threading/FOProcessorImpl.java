@@ -36,11 +36,10 @@ import javax.xml.transform.sax.SAXResult;
 
 import org.xml.sax.SAXException;
 
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.fop.threading.logger.AbstractLogEnabled;
 import org.apache.commons.io.FilenameUtils;
 
 import org.apache.fop.apps.FOPException;

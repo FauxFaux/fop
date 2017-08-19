@@ -25,8 +25,7 @@ import java.io.IOException;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.logger.ConsoleLogger;
+import org.apache.fop.threading.logger.ConsoleLogger;
 
 /**
  * Starter class for the multi-threading testbed.
@@ -60,9 +59,9 @@ public final class Main {
 
             //Setup testbed
             FOPTestbed testbed = new FOPTestbed();
-            ContainerUtil.enableLogging(testbed, new ConsoleLogger(ConsoleLogger.LEVEL_INFO));
-            ContainerUtil.configure(testbed, cfg);
-            ContainerUtil.initialize(testbed);
+            testbed.enableLogging(new ConsoleLogger(ConsoleLogger.LEVEL_INFO));
+            testbed.configure(cfg);
+            testbed.initialize();
 
             //Start tests
             testbed.doStressTest();

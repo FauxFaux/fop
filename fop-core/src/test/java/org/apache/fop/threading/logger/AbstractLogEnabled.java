@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.avalon.framework.logger;
+package org.apache.fop.threading.logger;
 
 /**
  * Utility class to allow easy construction of components that will perform 

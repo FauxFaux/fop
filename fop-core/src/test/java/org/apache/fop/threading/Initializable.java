@@ -14,24 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.avalon.framework.activity;
+package org.apache.fop.threading;
 
-/**
- * The Initializable interface is used by components that need to
- * allocate resources prior to them becoming active.
- *
- * @author <a href="mailto:dev@avalon.apache.org">Avalon Development Team</a>
- * @version $Id: Initializable.java 506231 2007-02-12 02:36:54Z crossley $
- */
+
 public interface Initializable
 {
-    /**
-     * Initialize the component. Initialization includes
-     * allocating any resources required throughout the
-     * component's lifecycle.
-     *
-     * @throws Exception if an error occurs
-     */
     void initialize()
         throws Exception;
 }

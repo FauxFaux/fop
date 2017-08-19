@@ -19,7 +19,7 @@
 
 package org.apache.fop.threading;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.fop.threading.logger.Logger;
 
 import org.apache.fop.events.Event;
 import org.apache.fop.events.EventFormatter;

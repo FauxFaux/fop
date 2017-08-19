@@ -31,13 +31,12 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.avalon.framework.activity.Executable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.fop.threading.logger.AbstractLogEnabled;
+import org.apache.fop.threading.logger.LogEnabled;
+import org.apache.fop.threading.logger.Logger;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.commons.io.output.NullOutputStream;
@@ -93,7 +92,9 @@ public class FOPTestbed extends AbstractLogEnabled
         List threadList = new java.util.LinkedList();
         for (int ti = 0; ti < this.threads; ti++) {
             TaskRunner runner = new TaskRunner();
-            ContainerUtil.enableLogging(runner, getLogger());
+            final Logger logger = getLogger();
+            assert null != logger : "logger is null";
+            runner.enableLogging( logger );
             Thread thread = new Thread(workerGroup, runner, "Worker- " + ti);
             threadList.add(thread);
         }
@@ -157,7 +158,9 @@ public class FOPTestbed extends AbstractLogEnabled
                     for (Object aTaskList : taskList) {
                         TaskDef def = (TaskDef) aTaskList;
                         final Task task = new Task(def, counter++, foprocessor);
-                        ContainerUtil.enableLogging(task, getLogger());
+                        final Logger logger = getLogger();
+                        assert null != logger : "logger is null";
+                        task.enableLogging( logger );
                         task.execute();
                     }
                 }
@@ -177,9 +180,21 @@ public class FOPTestbed extends AbstractLogEnabled
             Class clazz = Class.forName(this.fopCfg.getAttribute("class",
                     "org.apache.fop.threading.FOProcessorImpl"));
             Processor fop = (Processor)clazz.getDeclaredConstructor().newInstance();
-            ContainerUtil.enableLogging(fop, getLogger());
-            ContainerUtil.configure(fop, this.fopCfg);
-            ContainerUtil.initialize(fop);
+            final Logger logger = getLogger();
+            if( fop instanceof LogEnabled)
+            {
+                assert null != logger : "logger is null";
+                ( (LogEnabled) fop).enableLogging( logger );
+            }
+            if( fop instanceof Configurable )
+            {
+                assert null != this.fopCfg : "configuration is null";
+                ( (Configurable) fop).configure(this.fopCfg);
+            }
+            if( fop instanceof Initializable )
+            {
+                ( (Initializable) fop).initialize();
+            }
             return fop;
         } catch (Exception e) {
             throw new RuntimeException("Error creating FO Processor", e);
@@ -242,7 +257,7 @@ public class FOPTestbed extends AbstractLogEnabled
     }
 
 
-    private class Task extends AbstractLogEnabled implements Executable {
+    private class Task extends AbstractLogEnabled {
 
         private TaskDef def;
         private int num;
