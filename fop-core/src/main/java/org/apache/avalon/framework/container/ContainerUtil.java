@@ -31,9 +31,6 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -200,33 +197,6 @@ public final class ContainerUtil
                 throw new IllegalArgumentException( message );
             }
             ( (Configurable)object ).configure( configuration );
-        }
-    }
-
-    /**
-     * Parameterize specified object if it implements the
-     * {@link Parameterizable} interface.
-     *
-     * @param object the object to Parameterize.
-     * @param parameters the parameters object to use during Parameterization.
-     *        May be null in which case the specified object must not
-     *        implement Parameterizable.
-     * @throws ParameterException if there is a problem Parameterizing object
-     * @throws IllegalArgumentException if the object is Parameterizable but
-     *         parameters is null
-     */
-    public static void parameterize( final Object object,
-                                     final Parameters parameters )
-        throws ParameterException
-    {
-        if( object instanceof Parameterizable )
-        {
-            if( null == parameters )
-            {
-                final String message = "parameters is null";
-                throw new IllegalArgumentException( message );
-            }
-            ( (Parameterizable)object ).parameterize( parameters );
         }
     }
 

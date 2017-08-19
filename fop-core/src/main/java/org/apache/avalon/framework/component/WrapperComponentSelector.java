@@ -117,7 +117,6 @@ public class WrapperComponentSelector
     }
 
     /**
-     * The {@link WrapperComponentManager} wraps ServiceSelectors in
      *  WrapperServiceSelectors when they are looked up.  This method
      *  makes it possible to release the original component selector.
      *
